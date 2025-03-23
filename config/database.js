@@ -1,19 +1,18 @@
 import dotenv from "dotenv";
 import { Sequelize } from "sequelize";
 
-dotenv.config(); // Load environment variables from .env
+dotenv.config(); // Load environment variables
 
-// Create a new Sequelize instance with PostgreSQL credentials from .env
-const sequelize = new Sequelize(
-  process.env.DB_NAME, // Database name
-  process.env.DB_USER, // Database user
-  process.env.DB_PASS, // Database password
-  {
-    host: process.env.DB_HOST, // Database host (localhost)
-    dialect: "postgres", // Specify we're using PostgreSQL
-    logging: false, // Disable SQL logging (optional, makes console cleaner)
-  }
-);
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: "postgres",
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
+  logging: false, // Disable SQL logging (optional)
+});
 
 // Test database connection
 const testConnection = async () => {
@@ -27,4 +26,4 @@ const testConnection = async () => {
 
 testConnection();
 
-export default sequelize; // Export sequelize instance for use in models
+export default sequelize; // Export Sequelize instance
